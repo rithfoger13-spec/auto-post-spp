@@ -1,11 +1,9 @@
 import os
 import logging
-import asyncio
 import requests
 import aiohttp
 from telegram import Update, InputMediaPhoto, InputMediaVideo
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
-from keep_alive import keep_alive
 
 # បើកដំណើរការ Logging
 logging.basicConfig(
@@ -75,11 +73,11 @@ async def process_single_link(update: Update, url: str):
                             )
                             await update.message.reply_text("✅ រួចរាល់! វីដេអូត្រូវបានទាញយកដោយជោគជ័យ។")
                         else:
-                            await update.message.reply_text("⚠️ មិនអាចទាញយកឯកសារវីដេអូនេះបានទេ។")
+                            await update.message.reply_text("⚠️ មិនអាចទាញយកឯកសារវីដេអូនេះได้ទេ។")
             else:
-                await update.message.reply_text("❌ មិនអាចរកឃើញមាតិកា (រូបភាព ឬវីដេអូ) ពី Link នេះបានទេ។")
+                await update.message.reply_text("❌ មិនអាចរកឃើញមាតិកា (រូបភាព ឬវីដេអូ) ពី Link នេះได้ទេ។")
         else:
-            await update.message.reply_text("❌ មិនអាចអាន Link នេះបានទេ (ប្រហែលខុសទម្រង់ ឬជាប់កម្រិតឯកជនភាព)។")
+            await update.message.reply_text("❌ មិនអាចអាន Link នេះได้ទេ (ប្រហែលខុសទម្រង់ ឬជាប់កម្រិតឯកជនភាព)។")
             
     except Exception as e:
         await update.message.reply_text(f"❌ មានបញ្ហាបច្ចេកទេស៖ {str(e)}")
@@ -102,24 +100,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await process_single_link(update, real_url)
 
 def main():
-    # ចាប់ផ្តើម Flask Keep-Alive Server សម្រាប់ Render Web Service
-    keep_alive()
-
     application = ApplicationBuilder().token(TOKEN).build()
     
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
     print("🤖 Bot Universal Download (Video + Slideshow + Caption) កំពុងដំណើរការហើយ...")
-    
-    # ការពារបញ្ហា Event Loop លើ Python កំណែថ្មី
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_closed():
-            raise RuntimeError()
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-
     application.run_polling()
 
 if __name__ == '__main__':
