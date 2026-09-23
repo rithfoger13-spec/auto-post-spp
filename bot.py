@@ -11,7 +11,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-TOKEN = "8909903351:AAEvmhToP2-Vf0lqpA_wXNdXsBoAw5rc5jM"
+TOKEN = "8843483094:AAEgWgrexmAl0z1daH4QRxEz-2HHg3Cql9c"
 
 os.makedirs("downloads", exist_ok=True)
 
